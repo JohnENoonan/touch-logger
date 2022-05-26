@@ -1,0 +1,3 @@
+[submodule "submodules/touch-tox-exporter"]
+	path = submodules/touch-tox-exporter
+	url = git@github.com:JohnENoonan/touch-tox-exporter.git
