@@ -8,9 +8,15 @@
 # severity - describes the level of error (0=info, 1=warning, 2=error, 3=fatal)
 # type - describes the family of error
 # source - the operator that generated the error
+from logger import LoggerExt
+import td
 
 keys = ["info", "warning", "error", "fatal"]
 
 def onError(dat, rowIndex, message, absFrame, frame, severity, type, source):
 	if source is not None:
-		op.log.ComposeLog(message.replace('\n', '\n\t'), keys[severity])
+		msg = message.replace('\n', '\n\t')
+		try:
+			op.log.ComposeLog(msg, keys[severity])
+		except td.Error:
+			LoggerExt().ComposeLog(msg, keys[severity])
