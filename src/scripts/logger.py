@@ -1,6 +1,7 @@
 import os
 from loglevel import LogLevel
 from time import strftime, gmtime, localtime
+from inspect import getframeinfo, stack
 
 TIME_FMT = "%y-%m-%d %H:%M:%S"
 DAY_FMT = "%y-%m-%d"
@@ -9,23 +10,23 @@ class LoggerExt:
 
 	def __init__(self, ownerComp):
 		self.ownerComp = ownerComp
-		self.error_dat = op( 'error1' )
+		# clear existing errors
+		self.error_dat = op( 'error1' ).par.clear.pulse()
+		# configure settings 
 		self.Log_to_file_bool = bool(parent().par.Logtofile)
 		self.Log_to_textport_bool = bool(parent().par.Logtotextport)
 		self.UTC = str(parent().par.Timeformat) == "utc"
 		self.Folder = parent().par.Logfolder.eval()
 		self.Rotate_file = str(parent().par.Rotatefile)
 		self.Logname = str(parent().par.Logname)
-
-		self.Set_level(str(parent().par.Logginglevel))
-		
-
-		# clean up
-		self.error_dat.par.clear.pulse()
-
+		# set the log level
+		self.SetLevel(str(parent().par.Logginglevel))
 		self.Debug("Initialized Logger")
 
-	def Set_level(self, level):
+	def SetLevel(self, level):
+		if level not in LogLevel.levels:
+			self.Warning(f"Cannot set log level to \"{level}\"")
+			return
 		self.level = LogLevel(level)
 		self.Debug("set log level to " + level)
 
@@ -106,4 +107,6 @@ class LoggerExt:
 		return strftime( TIME_FMT, localtime() )
 
 	def formatMsg(self, msg, level):
-		return f"|{level.ljust(LogLevel.padding)}| {self.timestamp()} | {msg}"
+		# get the original function caller
+		caller = getframeinfo(stack()[3][0])
+		return f"|{level.ljust(LogLevel.padding)}| {self.timestamp()} | {caller.filename}[{caller.lineno}] | {msg}"
