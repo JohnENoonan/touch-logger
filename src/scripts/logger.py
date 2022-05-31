@@ -30,48 +30,48 @@ class LoggerExt:
 		self.level = LogLevel(level)
 		self.Debug("set log level to " + level)
 
-	def Verbose(self, msg):
+	def Verbose(self, msg, stackindex=3):
 		if self.level > LogLevel.VERBOSE():
 			return
-		self.log(msg, "verbose")
+		self.log(msg, "verbose", stackindex=stackindex)
 
-	def Debug(self, msg):
+	def Debug(self, msg, stackindex=3):
 		if self.level > LogLevel.DEBUG():
 			return
-		self.log(msg, "debug")
+		self.log(msg, "debug", stackindex=stackindex)
 
-	def Info(self, msg):
+	def Info(self, msg, stackindex=3):
 		if self.level > LogLevel.INFO():
 			return
-		self.log(msg, "info")
+		self.log(msg, "info", stackindex=stackindex)
 
-	def Warning(self, msg):
+	def Warning(self, msg, stackindex=3):
 		if self.level > LogLevel.WARNING():
 			return
-		self.log(msg, "warning")
+		self.log(msg, "warning", stackindex=stackindex)
 
-	def Error(self, msg):
+	def Error(self, msg, stackindex=3):
 		if self.level > LogLevel.ERROR():
 			return
-		self.log(msg, "error")
+		self.log(msg, "error", stackindex=stackindex)
 
-	def Fatal(self, msg):
-		self.log(msg, "fatal")
+	def Fatal(self, msg, stackindex=3):
+		self.log(msg, "fatal", stackindex=stackindex)
 
 	def ComposeLog(self, msg, severity):
 		if severity == "info":
-			self.Info(msg)
+			self.Info(msg, stackindex=4)
 		elif severity == "warning":
-			self.Warning(msg)
+			self.Warning(msg, stackindex=4)
 		elif severity == "error":
-			self.Error(msg)
+			self.Error(msg, stackindex=4)
 		elif severity == "fatal":
-			self.Fatal(msg)
+			self.Fatal(msg, stackindex=4)
 		else:
-			self.Debug(msg)
+			self.Debug(msg, stackindex=4)
 
-	def log(self, msg, level):
-		msg = self.formatMsg(msg, level)
+	def log(self, msg, level, stackindex=3):
+		msg = self.formatMsg(msg, level, stackindex)
 		self.log_to_textport(msg)
 		self.log_to_file(msg)
 
@@ -106,7 +106,7 @@ class LoggerExt:
 			return strftime( TIME_FMT, gmtime() )
 		return strftime( TIME_FMT, localtime() )
 
-	def formatMsg(self, msg, level):
+	def formatMsg(self, msg, level, stackindex=3):
 		# get the original function caller
-		caller = getframeinfo(stack()[3][0])
+		caller = getframeinfo(stack()[stackindex][0])
 		return f"|{level.ljust(LogLevel.padding)}| {self.timestamp()} | {caller.filename}[{caller.lineno}] | {msg}"
