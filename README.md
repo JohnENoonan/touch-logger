@@ -10,7 +10,7 @@ To use the logger, grab the release `release/Logger.tox`. This can then be inclu
 ### Configuration
 To use the logger, configure the settings in the components `Logger` page.
 * `Logging Level` is the minimum level that will actual be logged out. Anything lower than the selected will neither be written to the textport or the log file.
-* `Rotate File` is used to write each day to its own file. When enabled the a file will be created with the following format `{specified log folder}/{two digit month}/{full year}-{two digit month}-{two digit day}`
+* `Rotate File` is used to write each day to its own file. When enabled, a file will be created with the following format `{specified log folder}/{two digit month}/{full year}-{two digit month}-{two digit day}`
 * `Time Format` specifies whether the timestamps used will be using UTC or the local time as configured by the PC.
 
 ### API
