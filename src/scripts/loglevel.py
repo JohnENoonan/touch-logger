@@ -1,4 +1,6 @@
-
+"""
+Loglevel is used to define what severity a printout is
+"""
 
 class LogLevel:
 

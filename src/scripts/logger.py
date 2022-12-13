@@ -59,6 +59,9 @@ class LoggerExt:
 		self.log(msg, "fatal", stackindex=stackindex)
 
 	def ComposeLog(self, msg, severity):
+		"""
+		Create a dynamic log by being passed the everity value as a string
+		"""
 		if severity == "info":
 			self.Info(msg, stackindex=4)
 		elif severity == "warning":
